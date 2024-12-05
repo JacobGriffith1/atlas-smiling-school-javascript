@@ -19,6 +19,41 @@
 
 /* General Styles  */
 
+#hand {
+  position: relative;
+  width: 100%;
+}
+
+.slick-prev:before, .slick-next:before {
+  color: black !important;
+  font-size: 24px;
+}
+
+.slick-prev {
+  left: -40px;
+}
+
+.slick-next {
+  right: -40px;
+}
+
+#loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.card {
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.card-body {
+  text-align: center;
+}
+
 .body {
   font-family: var(--font-family-1);
 }

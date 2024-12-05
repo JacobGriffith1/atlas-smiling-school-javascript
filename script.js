@@ -41,12 +41,51 @@ function getQuote() {
 
 getQuote();
 
+function getQuote() {
+    $.ajax({
+        url: 'https://smileschool-api.hbtn.info/quotes',
+        method: 'GET',
+        success: function(quotes) {
+            const q = quotes;
+            const carouselCont = $('#carouselExampleControls .carousel-inner');
+
+            carouselCont.empty();
+
+            q.forEach((quote, index) => {
+                const isActive = index === 0 ? 'active' : '';
+                const carouselItem = `
+                    <div class="carousel-item ${isActive}">
+                        <div class="row mx-auto align-items-center">
+                            <div class="col-12 col-sm-2 col-lg-2 offset-lg-1 text-center">
+                                <img src="${quote.pic_url}" class="d-block align-self-center" alt="${quote.name}'s picture">
+                            </div>
+                            <div class="col-12 col-sm-7 offset-sm-2 col-lg-9 offset-lg-0">
+                                <div class="quote-text">
+                                    <p class="text-white">${quote.text}"</p>
+                                    <h4 class="text-white font-weight-bold">${quote.name}</h4>
+                                    <span class="text-white">${quote.title}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                carouselCont.append(carouselItem);
+            });
+        },
+        error: function(error) {
+            console.log('Error fetching quotes:', error);
+        }
+    });
+}
+
+getQuote();
+
 function getTutorial() {
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/popular-tutorials',
         method: 'GET',
         success: function(tutorials) {
-            console.log('Tutorials data:', tutorials); // Check if tutorials data is received
+            console.log('Tutorials data:', tutorials);
             const carouselHand = $('#hand');
             carouselHand.empty();
 
@@ -56,10 +95,10 @@ function getTutorial() {
                     const stars = createStars(tutorial.star);
                     const carouselItem = `
                         <div class="carousel-item ${isActive}">
-                            <div class="card border-light mb-3 shadow-sm">
+                            <div class="card border-light mb-3">
                                 <img src="${tutorial.thumb_url}" class="card-img-top" alt="Video thumbnail"/>
                                 <div class="card-img-overlay text-center">
-                                    <img src="images/play.png" alt="Play" width="64px" class="align-self-center play-overlay"/>
+                                    <img src="images/play.png" alt="Play" width="64px" class="d-flex align-self-center play-overlay"/>
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title font-weight-bold">${tutorial.title}</h5>
@@ -84,23 +123,23 @@ function getTutorial() {
                     slidesToScroll: 1,
                     infinite: true,
                     arrows: true,
-                    dots: true,
+                    dots: false,
                     autoplay: false,
                     responsive: [
                         {
-                            breakpoint: 1024,
+                            breakpoint: 768,
                             settings: {
                                 slidesToShow: 2,
                                 slidesToScroll: 1
                             }
                         },
                         {
-                            breakpoint: 768,
+                            breakpoint: 576,
                             settings: {
                                 slidesToShow: 1,
                                 slidesToScroll: 1
                             }
-                        },
+                        }
                     ]
                 });
             } else {
@@ -128,5 +167,4 @@ function createStars(rating) {
 
 $(document).ready(function() {
     getTutorial();
-    createStars();
 });
