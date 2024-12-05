@@ -37,6 +37,22 @@
   right: -40px;
 }
 
+.card-img-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(0%, -37%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.play-overlay {
+  width: 64px;
+  height: 64px;
+  z-index: 1;
+}
+
 #loader {
   position: absolute;
   top: 50%;

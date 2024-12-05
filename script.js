@@ -123,8 +123,8 @@ function getTutorial() {
                     slidesToScroll: 1,
                     infinite: true,
                     arrows: true,
-                    dots: false,
-                    autoplay: false,
+                    dots: true,
+                    autoplay: true,
                     responsive: [
                         {
                             breakpoint: 768,
