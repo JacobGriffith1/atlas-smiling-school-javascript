@@ -152,6 +152,78 @@ function getTutorial() {
     });
 }
 
+function getLatest() {
+    $.ajax({
+        url: 'https://smileschool-api.hbtn.info/latest-videos',  // Replace with actual API URL
+        method: 'GET',
+        success: function(videos) {
+            console.log('Latest videos data:', videos);
+            const carouselLatest = $('#latest');  // Changed container ID to #latest
+            carouselLatest.empty();
+
+            if (videos && videos.length > 0) {
+                videos.forEach((video, index) => {
+                    const isActive = index === 0 ? 'active' : '';
+                    const stars = createStars(video.star);
+                    const carouselItem = `
+                        <div class="carousel-item ${isActive}">
+                            <div class="card border-light mb-3">
+                                <img src="${video.thumb_url}" class="card-img-top" alt="Video thumbnail"/>
+                                <div class="card-img-overlay text-center">
+                                    <img src="images/play.png" alt="Play" width="64px" class="d-flex align-self-center play-overlay"/>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title font-weight-bold">${video.title}</h5>
+                                    <p class="card-text text-muted">${video['sub-title']}</p>
+                                    <div class="creator d-flex align-items-center">
+                                        <img src="${video.author_pic_url}" alt="Creator" width="30px" class="rounded-circle"/>
+                                        <h6 class="pl-3 m-0 main-color">${video.author}</h6>
+                                    </div>
+                                    <div class="info pt-3 d-flex justify-content-between">
+                                        <div class="rating">${stars}</div>
+                                        <span class="main-color">${video.duration}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    carouselLatest.append(carouselItem);
+                });
+
+                $('#latest').slick({
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
+                    infinite: true,
+                    arrows: true,
+                    dots: false,
+                    autoplay: false,
+                    responsive: [
+                        {
+                            breakpoint: 768,
+                            settings: {
+                                slidesToShow: 2,
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 576,
+                            settings: {
+                                slidesToShow: 1,
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+            } else {
+                console.log('No videos data available.');
+            }
+        },
+        error: function(error) {
+            console.error('Error fetching latest videos:', error);
+        }
+    });
+}
+
 function createStars(rating) {
     let stars = '<div class="d-flex">';
     for (let i = 0; i < 5; i++) {
@@ -167,4 +239,5 @@ function createStars(rating) {
 
 $(document).ready(function() {
     getTutorial();
+    getLatest();
 });
