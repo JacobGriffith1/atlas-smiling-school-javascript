@@ -1,5 +1,7 @@
 function getQuote() {
-    //loader();
+    $('#loader').show();
+    console.log('loadshow');
+
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/quotes',
         method: 'GET',
@@ -30,50 +32,14 @@ function getQuote() {
                 carouselCont.append(carouselItem);
             });
 
-            //loader();
+            $('#loader').hide();
+            console.log('loadhide');
         },
         error: function(error) {
             console.log('Error fetching quotes:', error);
-            loader();
-        }
-    });
-}
-
-getQuote();
-
-function getQuote() {
-    $.ajax({
-        url: 'https://smileschool-api.hbtn.info/quotes',
-        method: 'GET',
-        success: function(quotes) {
-            const q = quotes;
-            const carouselCont = $('#carouselExampleControls .carousel-inner');
-
-            carouselCont.empty();
-
-            q.forEach((quote, index) => {
-                const isActive = index === 0 ? 'active' : '';
-                const carouselItem = `
-                    <div class="carousel-item ${isActive}">
-                        <div class="row mx-auto align-items-center">
-                            <div class="col-12 col-sm-2 col-lg-2 offset-lg-1 text-center">
-                                <img src="${quote.pic_url}" class="d-block align-self-center" alt="${quote.name}'s picture">
-                            </div>
-                            <div class="col-12 col-sm-7 offset-sm-2 col-lg-9 offset-lg-0">
-                                <div class="quote-text">
-                                    <p class="text-white">${quote.text}"</p>
-                                    <h4 class="text-white font-weight-bold">${quote.name}</h4>
-                                    <span class="text-white">${quote.title}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                carouselCont.append(carouselItem);
-            });
-        },
-        error: function(error) {
-            console.log('Error fetching quotes:', error);
+            
+            $('#loader').hide();
+            console.log('loadhide');
         }
     });
 }
@@ -81,6 +47,9 @@ function getQuote() {
 getQuote();
 
 function getTutorial() {
+    $('#loader').show();
+    console.log('loadshow');
+
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/popular-tutorials',
         method: 'GET',
@@ -116,6 +85,9 @@ function getTutorial() {
                         </div>
                     `;
                     carouselHand.append(carouselItem);
+
+                    $('#loader').hide();
+                    console.log('loadhide');
                 });
 
                 $('#hand').slick({
@@ -153,6 +125,9 @@ function getTutorial() {
 }
 
 function getLatest() {
+    $('#loader').show();
+    console.log('loadshow');
+
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/latest-videos',  // Replace with actual API URL
         method: 'GET',
@@ -188,6 +163,9 @@ function getLatest() {
                         </div>
                     `;
                     carouselLatest.append(carouselItem);
+
+                    $('#loader').hide();
+                    console.log('loadhide');
                 });
 
                 $('#latest').slick({
