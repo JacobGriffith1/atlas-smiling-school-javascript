@@ -1,6 +1,5 @@
 function getQuote() {
     $('#loader').show();
-    console.log('loadshow');
 
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/quotes',
@@ -33,13 +32,9 @@ function getQuote() {
             });
 
             $('#loader').hide();
-            console.log('loadhide');
         },
         error: function(error) {
-            console.log('Error fetching quotes:', error);
-            
             $('#loader').hide();
-            console.log('loadhide');
         }
     });
 }
@@ -48,13 +43,11 @@ getQuote();
 
 function getTutorial() {
     $('#loader').show();
-    console.log('loadshow');
 
     $.ajax({
         url: 'https://smileschool-api.hbtn.info/popular-tutorials',
         method: 'GET',
         success: function(tutorials) {
-            console.log('Tutorials data:', tutorials);
             const carouselHand = $('#hand');
             carouselHand.empty();
 
@@ -85,9 +78,6 @@ function getTutorial() {
                         </div>
                     `;
                     carouselHand.append(carouselItem);
-
-                    $('#loader').hide();
-                    console.log('loadhide');
                 });
 
                 $('#hand').slick({
@@ -114,26 +104,24 @@ function getTutorial() {
                         }
                     ]
                 });
-            } else {
-                console.log('No tutorials data available.');
             }
+
+            $('#loader').hide();
         },
         error: function(error) {
-            console.error('Error fetching tutorials:', error);
+            $('#loader').hide();
         }
     });
 }
 
 function getLatest() {
     $('#loader').show();
-    console.log('loadshow');
 
     $.ajax({
-        url: 'https://smileschool-api.hbtn.info/latest-videos',  // Replace with actual API URL
+        url: 'https://smileschool-api.hbtn.info/latest-videos',
         method: 'GET',
         success: function(videos) {
-            console.log('Latest videos data:', videos);
-            const carouselLatest = $('#latest');  // Changed container ID to #latest
+            const carouselLatest = $('#latest');
             carouselLatest.empty();
 
             if (videos && videos.length > 0) {
@@ -163,9 +151,6 @@ function getLatest() {
                         </div>
                     `;
                     carouselLatest.append(carouselItem);
-
-                    $('#loader').hide();
-                    console.log('loadhide');
                 });
 
                 $('#latest').slick({
@@ -192,12 +177,12 @@ function getLatest() {
                         }
                     ]
                 });
-            } else {
-                console.log('No videos data available.');
             }
+
+            $('#loader').hide();
         },
         error: function(error) {
-            console.error('Error fetching latest videos:', error);
+            $('#loader').hide();
         }
     });
 }
@@ -218,4 +203,101 @@ function createStars(rating) {
 $(document).ready(function() {
     getTutorial();
     getLatest();
+});
+
+$(document).ready(function() {
+    const API_URL = 'https://smileschool-api.hbtn.info/courses';
+
+    function fetchCourses() {
+        const search = $('#search').val();
+        const topic = $('#topic').val();
+        const sort = $('#sort').val();
+        
+        $('#loader').show();
+        
+        $.ajax({
+            url: API_URL,
+            method: 'GET',
+            data: {
+                q: search,
+                topic: topic,
+                sort: sort
+            },
+            success: function(response) {
+                const courses = response.courses;
+                const courseContainer = $('#course-cards');
+                courseContainer.empty();
+                
+                if (courses.length > 0) {
+                    courses.forEach((course) => {
+                        const carouselItem = `
+                            <div class="col-md-4" data-keywords="${course.keywords.join(', ')}">
+                                <div class="card mb-4">
+                                    <img src="${course.thumb_url}" class="card-img-top" alt="Video thumbnail">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${course.title}</h5>
+                                        <p class="card-text">${course['sub-title']}</p>
+                                        <div class="creator d-flex align-items-center">
+                                            <img src="${course.author_pic_url}" alt="Creator" width="30px" class="rounded-circle"/>
+                                            <h6 class="pl-3 m-0">${course.author}</h6>
+                                        </div>
+                                        <div class="info pt-3 d-flex justify-content-between">
+                                            <span>${course.duration}</span>
+                                            <span>${course.views} views</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        courseContainer.append(carouselItem);
+                    });
+                } else {
+                    courseContainer.html('<p>No courses found for the selected filters.</p>');
+                }
+                $('#loader').hide();
+            },
+            error: function() {
+                $('#loader').hide();
+                alert('Error fetching courses');
+            }
+        });
+    }
+
+    $('#search').on('input', function() {
+        fetchCourses();
+    });
+
+    $('#topic').on('change', function() {
+        fetchCourses();
+    });
+
+    $('#sort').on('change', function() {
+        fetchCourses();
+    });
+
+    $.ajax({
+        url: API_URL,
+        method: 'GET',
+        success: function(response) {
+            populateTopics(response.topics);
+            populateSorts(response.sorts);
+            fetchCourses();
+        }
+    });
+
+    function populateTopics(topics) {
+        const topicDropdown = $('#topic');
+        topicDropdown.empty();
+        topics.forEach((topic) => {
+            topicDropdown.append(`<option value="${topic}">${topic}</option>`);
+        });
+    }
+
+    function populateSorts(sorts) {
+        const sortDropdown = $('#sort');
+        sortDropdown.empty();
+        sorts.forEach((sort) => {
+            sortDropdown.append(`<option value="${sort}">${sort.replace(/_/g, ' ').toUpperCase()}</option>`);
+        });
+    }
 });
